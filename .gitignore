@@ -1,0 +1,16 @@
+# Word documents
+*.doc
+*.docx
+*.docm
+*.dot
+*.dotx
+*.dotm
+
+# Local Python environment and generated files
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# OS/editor noise
+.DS_Store

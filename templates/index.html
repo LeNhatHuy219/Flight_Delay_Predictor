@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flight Delay Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="container">
+
+  <div class="topbar">
+    <div class="brand">FLIGHT<span>DELAY</span></div>
+    <div class="top-metric" id="top-metric">Loading...</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="predict">Dự báo</button>
+    <button class="tab" data-tab="metrics">Metrics</button>
+    <button class="tab" data-tab="about">Về dự án</button>
+  </div>
+
+  <!-- ── TAB: DỰ BÁO ─────────────────────────────── -->
+  <div id="tab-predict" class="tab-pane active">
+    <div class="hero">
+      <h1>Dự báo <em>trễ chuyến bay</em></h1>
+      <p>Ước lượng thời gian trễ cất cánh dựa trên hãng hàng không, sân bay xuất phát, sân bay đến, thời điểm bay và các đặc trưng ngữ cảnh trong dữ liệu lịch sử.</p>
+    </div>
+
+    <div class="main-grid">
+      <!-- Form -->
+      <div>
+        <div class="soft-card">
+          <div class="card-title">Thông tin chuyến bay</div>
+          <div class="row2">
+            <div>
+              <label class="field-label">Sân bay xuất phát</label>
+              <select id="origin"></select>
+            </div>
+            <div>
+              <label class="field-label">Sân bay đến</label>
+              <select id="dest"></select>
+            </div>
+            <div>
+              <label class="field-label">Ngày bay</label>
+              <input type="date" id="dep-date" value="2015-01-01">
+            </div>
+            <div>
+              <label class="field-label">Giờ cất cánh</label>
+              <select id="dep-time"></select>
+            </div>
+          </div>
+
+          <div style="margin-top:.9rem">
+            <label class="field-label">Chế độ dự báo</label>
+            <div class="mode-toggle">
+              <button class="mode-btn active" data-mode="single">Một hãng</button>
+              <button class="mode-btn" data-mode="all"> So sánh tất cả hãng</button>
+            </div>
+          </div>
+
+          <div id="airline-section" style="margin-top:.9rem">
+            <label class="field-label">Hãng hàng không</label>
+            <select id="airline"></select>
+          </div>
+
+          <button class="btn" id="predict-btn">Dự đoán</button>
+        </div>
+
+        <div id="result-area"></div>
+        <div id="history-area"></div>
+      </div>
+
+      <!-- Map -->
+      <div>
+        <div class="card-title">Lộ trình chuyến bay</div>
+        <div class="map-wrap">
+          <div id="map-container">
+            <div class="map-empty">
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;margin-bottom:.35rem">Lộ trình sẽ hiển thị sau khi dự đoán</div>
+                <div style="font-size:.82rem">Bản đồ dùng tọa độ từ data/airports.csv.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: METRICS ───────────────────────────── -->
+  <div id="tab-metrics" class="tab-pane">
+    <div class="hero">
+      <h1>Model <em>Metrics</em></h1>
+      <p>Các chỉ số đánh giá lấy trực tiếp từ artifact model đã lưu sau quá trình huấn luyện và benchmark.</p>
+    </div>
+    <div class="metric-grid" id="metric-grid"></div>
+    <div class="soft-card" id="leaderboard-card" style="margin-top:1rem"></div>
+    <div class="soft-card" id="stage-card" style="margin-top:1rem"></div>
+    <div class="soft-card" id="fi-card" style="margin-top:1rem"></div>
+    <div class="soft-card" style="margin-top:1rem">
+      <div class="card-title">Diễn giải kết quả</div>
+      <div class="info-grid">
+        <div class="info-tile"><div class="info-title">RMSE</div><div class="info-text">Cho biết sai số trung bình theo thang phút; delay thực tế có nhiều ngoại lệ nên RMSE thường nhạy với các chuyến trễ rất lớn.</div></div>
+        <div class="info-tile"><div class="info-title">R²</div><div class="info-text">Phản ánh phần phương sai delay mà feature hiện tại giải thích được; flight delay khó dự đoán tuyệt đối vì thiếu nhiều yếu tố vận hành.</div></div>
+        <div class="info-tile"><div class="info-title">Baseline</div><div class="info-text">Dummy baseline và các model tuyến tính giúp kiểm tra liệu mô hình phức tạp có thật sự học được tín hiệu có ích hay không.</div></div>
+        <div class="info-tile"><div class="info-title">Deploy</div><div class="info-text">Model triển khai ưu tiên pipeline sklearn có preprocessing đi kèm để Flask API có thể dự đoán trực tiếp từ input người dùng.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAB: VỀ DỰ ÁN ──────────────────────────── -->
+  <div id="tab-about" class="tab-pane">
+    <div class="hero">
+      <h1>Về <em>dự án</em></h1>
+      <p>Pipeline Data Mining từ EDA, tiền xử lý, feature engineering, baseline, benchmark nhiều mô hình đến demo web bằng Flask API.</p>
+    </div>
+    <div class="about-grid">
+      <div>
+        <div class="soft-card">
+          <div class="card-title">Tech stack</div>
+          <div class="info-grid">
+            <div class="info-tile"><div class="info-title">Data Processing</div><div class="info-text">pandas, numpy</div></div>
+            <div class="info-tile"><div class="info-title">Visualization</div><div class="info-text">matplotlib, seaborn, folium</div></div>
+            <div class="info-tile"><div class="info-title">Machine Learning</div><div class="info-text">scikit-learn, XGBoost, LightGBM</div></div>
+            <div class="info-tile"><div class="info-title">Deep Learning</div><div class="info-text">PyTorch, TabNet, Tabular Transformer</div></div>
+            <div class="info-tile"><div class="info-title">Model Artifact</div><div class="info-text">joblib, preprocessing pipeline, metadata</div></div>
+            <div class="info-tile"><div class="info-title">Demo</div><div class="info-text">Flask, Jinja2 templates</div></div>
+          </div>
+        </div>
+        <div class="soft-card" style="margin-top:1rem">
+          <div class="card-title">Dataset</div>
+          <div class="info-grid">
+            <div class="info-tile"><div class="info-title">Nguồn dữ liệu</div><div class="info-text">US DOT 2015 Flight Delays & Cancellations</div></div>
+            <div class="info-tile"><div class="info-title">Phạm vi model</div><div class="info-text">Toàn bộ hãng hàng không có trong dữ liệu sau tiền xử lý</div></div>
+            <div class="info-tile"><div class="info-title">Target</div><div class="info-text">DEPARTURE_DELAY, tính theo phút</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="soft-card">
+          <div class="card-title">Pipeline phát triển</div>
+          <div class="info-grid">
+            <div class="info-tile"><div class="info-title">EDA & Tiền xử lý</div><div class="info-text">Làm sạch dữ liệu, xử lý thời gian, missing values, outliers và phân tích phân phối delay.</div></div>
+            <div class="info-tile"><div class="info-title">Baseline</div><div class="info-text">Thiết lập mô hình đơn giản và DummyRegressor để có mốc so sánh khách quan.</div></div>
+            <div class="info-tile"><div class="info-title">Route Modeling</div><div class="info-text">Đưa hãng hàng không, sân bay xuất phát và sân bay đến vào pipeline để mô hình hóa route.</div></div>
+            <div class="info-tile"><div class="info-title">ML Benchmark</div><div class="info-text">So sánh nhiều thuật toán hồi quy bằng MAE, RMSE, R², cross-validation và training time.</div></div>
+            <div class="info-tile"><div class="info-title">Mở rộng</div><div class="info-text">Thử nghiệm weather, delay propagation, classification, tuning và fairness analysis.</div></div>
+            <div class="info-tile"><div class="info-title">Deployment</div><div class="info-text">Lưu model tốt nhất thành artifact và dùng trực tiếp trong Flask API.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
