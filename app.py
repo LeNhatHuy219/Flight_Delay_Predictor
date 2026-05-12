@@ -314,8 +314,8 @@ def api_predict():
     dest = data.get("dest", "")
     date_str = data.get("date", "2015-01-01")
     time_str = data.get("time", "08:00")
-    scheduled_minutes = estimate_flight_time(origin, dest)
     mode = data.get("mode", "single")
+    scheduled_minutes = float(data["scheduled_time"]) if data.get("scheduled_time") else estimate_flight_time(origin, dest)
 
     if origin and dest and origin == dest:
         return jsonify({"error": "Sân bay xuất phát và sân bay đến không được trùng nhau."}), 400
@@ -342,6 +342,7 @@ def api_predict():
 
     if mode == "all":
         rows = []
+        errors = []
         for code in airline_options:
             try:
                 pred = predict_for_airline(code, origin, dest, flight_date, flight_time, scheduled_minutes, context_values)
@@ -350,10 +351,12 @@ def api_predict():
                     "name": airline_names.get(code, code),
                     "delay": round(max(0.0, pred), 2),
                 })
-            except Exception:
-                pass
+            except Exception as e:
+                errors.append(f"{code}: {e}")
+        if not rows:
+            return jsonify({"error": "Không thể dự đoán cho bất kỳ hãng nào. " + "; ".join(errors)}), 500
         rows.sort(key=lambda r: r["delay"])
-        avg = round(sum(r["delay"] for r in rows) / len(rows), 2) if rows else 0
+        avg = round(sum(r["delay"] for r in rows) / len(rows), 2)
         status_key, status_text = status_for_delay(avg)
         map_html = draw_flight_map(origin, dest, avg)
         return jsonify({
