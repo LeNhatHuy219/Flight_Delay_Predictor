@@ -10,6 +10,7 @@ Final project — Data Mining course, 2026.
 
 - [Giới thiệu](#giới-thiệu)
 - [Dataset](#dataset)
+- [Giao diện demo](#giao-diện-demo)
 - [Cấu trúc dự án](#cấu-trúc-dự-án)
 - [Pipeline](#pipeline)
 - [Kết quả](#kết-quả)
@@ -43,10 +44,21 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 
 ---
 
+## Giao diện demo
+
+![Flight Delay Predictor demo interface](assets/screenshots/predictor-home.png)
+
+Giao diện Flask demo gồm form nhập sân bay đi/đến, ngày giờ bay, chế độ dự báo theo một hãng hoặc so sánh tất cả hãng, cùng vùng bản đồ lộ trình sẽ hiển thị sau khi dự đoán.
+
+---
+
 ## Cấu trúc dự án
 
 ```
 .
+├── assets/
+│   └── screenshots/
+│       └── predictor-home.png               # Ảnh giao diện demo
 ├── CK_DataMining_all_airlines_final.ipynb   # Notebook chính (train trên Colab)
 ├── app.py                                   # Flask backend
 ├── requirements.txt                         # Dependencies cho Flask app
