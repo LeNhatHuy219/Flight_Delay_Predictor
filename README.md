@@ -10,11 +10,11 @@ Final project — Data Mining course, 2026.
 
 - [Giới thiệu](#giới-thiệu)
 - [Dataset](#dataset)
-- [Giao diện demo](#giao-diện-demo)
 - [Cấu trúc dự án](#cấu-trúc-dự-án)
 - [Pipeline](#pipeline)
 - [Kết quả](#kết-quả)
 - [Cài đặt & Chạy demo](#cài-đặt--chạy-demo)
+  - [Giao diện demo](#giao-diện-demo)
 - [Tech Stack](#tech-stack)
 
 ---
@@ -41,14 +41,6 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 > **Lưu ý:** Do kích thước lớn, `flights.csv` không được đưa vào repo. Tải về từ Kaggle và đặt vào Google Drive trước khi chạy notebook.
 >
 > **Về tập dữ liệu dùng trong notebook:** Toàn bộ phân tích EDA được thực hiện trên **tháng 1/2015** (~450.000 chuyến bay). Riêng giai đoạn modeling (Section 6.4 trở đi) dùng random sample **50.000 dòng** từ tập tháng 1 (tham số `MAX_MODEL_ROWS = 50_000`) để tối ưu tốc độ huấn luyện trên Colab free tier. Dataset gốc đầy đủ chứa ~5.8 triệu chuyến bay suốt cả năm 2015.
-
----
-
-## Giao diện demo
-
-![Flight Delay Predictor demo interface](assets/screenshots/predictor-home.png)
-
-Giao diện Flask demo gồm form nhập sân bay đi/đến, ngày giờ bay, chế độ dự báo theo một hãng hoặc so sánh tất cả hãng, cùng vùng bản đồ lộ trình sẽ hiển thị sau khi dự đoán.
 
 ---
 
@@ -170,6 +162,12 @@ python app.py
 ```
 
 Mở trình duyệt tại **http://127.0.0.1:5000**
+
+### Giao diện demo
+
+![Flight Delay Predictor demo interface](assets/screenshots/predictor-home.png)
+
+Giao diện Flask demo gồm form nhập sân bay đi/đến, ngày giờ bay, chế độ dự báo theo một hãng hoặc so sánh tất cả hãng, cùng vùng bản đồ lộ trình sẽ hiển thị sau khi dự đoán.
 
 ### Tính năng demo
 
