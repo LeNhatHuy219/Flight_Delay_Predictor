@@ -428,6 +428,14 @@ input[type=range]{
 .status-dot.slight{background:var(--amber);box-shadow:0 0 5px rgba(245,158,11,.6)}
 .status-dot.delayed{background:var(--red);box-shadow:0 0 5px rgba(244,63,94,.6)}
 
+/* ── Weather note ── */
+.weather-note{
+  margin-top:.65rem;font-size:.75rem;color:var(--muted);
+  display:flex;align-items:flex-start;gap:.45rem;
+  line-height:1.5;
+}
+.weather-note .fa-circle-info{color:var(--cyan);margin-top:.1rem;flex-shrink:0}
+
 /* ── Mode toggle ── */
 .mode-toggle{
   display:flex;gap:.4rem;

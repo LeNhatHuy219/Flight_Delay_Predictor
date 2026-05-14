@@ -69,6 +69,10 @@
           </div>
 
           <button class="btn" id="predict-btn">Dự đoán</button>
+          <div class="weather-note">
+            <i class="fa-solid fa-circle-info"></i>
+            Dự đoán dùng điều kiện thời tiết mặc định — độ chính xác có thể thấp hơn thực tế.
+          </div>
         </div>
 
         <div id="result-area"></div>
@@ -106,7 +110,7 @@
       <div class="card-title">Diễn giải kết quả</div>
       <div class="info-grid">
         <div class="info-tile"><div class="info-title">RMSE</div><div class="info-text">Cho biết sai số trung bình theo thang phút; delay thực tế có nhiều ngoại lệ nên RMSE thường nhạy với các chuyến trễ rất lớn.</div></div>
-        <div class="info-tile"><div class="info-title">R²</div><div class="info-text">Phản ánh phần phương sai delay mà feature hiện tại giải thích được; flight delay khó dự đoán tuyệt đối vì thiếu nhiều yếu tố vận hành.</div></div>
+        <div class="info-tile"><div class="info-title">R²</div><div class="info-text">R² thấp là đặc trưng của bài toán này — thiếu dữ liệu vận hành thực tế như tình trạng máy bay, ATC, gate congestion. Metric quan trọng hơn để đánh giá thực tế là <strong>MAE</strong> (sai số tuyệt đối trung bình theo phút).</div></div>
         <div class="info-tile"><div class="info-title">Baseline</div><div class="info-text">Dummy baseline và các model tuyến tính giúp kiểm tra liệu mô hình phức tạp có thật sự học được tín hiệu có ích hay không.</div></div>
         <div class="info-tile"><div class="info-title">Deploy</div><div class="info-text">Model triển khai ưu tiên pipeline sklearn có preprocessing đi kèm để Flask API có thể dự đoán trực tiếp từ input người dùng.</div></div>
       </div>
