@@ -93,10 +93,10 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 
 | Section | Nội dung | Kết quả |
 |---------|---------|---------|
-| 7.1 | Weather features (meteostat) | RMSE giảm 3.3% |
-| 7.2 | Delay Propagation features | RMSE giảm tiếp 0.9% |
-| 7.3 | Classification task (trễ ≥ 15 phút) | ROC-AUC 0.7341 |
-| 7.4 | Hyperparameter tuning (Optuna, 50 trials) | RMSE tốt nhất 12.910 phút |
+| 7.1 | Weather features (meteostat) | RMSE giảm 4.3% |
+| 7.2 | Delay Propagation features | RMSE còn 20.111 phút |
+| 7.3 | Classification task (trễ ≥ 15 phút) | ROC-AUC 0.7363 |
+| 7.4 | Hyperparameter tuning (Optuna, 50 trials) | RMSE tốt nhất 20.057 phút |
 | 7.5 | Fairness Analysis theo sân bay và vùng địa lý | Phát hiện bias Mountain region |
 
 ---
@@ -107,16 +107,16 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 
 | Giai đoạn | RMSE (phút) | MAE (phút) | R² |
 |-----------|------------|------------|-----|
-| Dummy Baseline | 14.215 | 10.316 | ~0 |
-| Linear / Ridge | ~13.7 | ~9.8 | ~0.07 |
-| **LightGBM (6.4)** | 13.505 | 9.521 | 0.0975 |
-| + Weather (7.1) | 13.052 | 9.065 | 0.1569 |
-| + Propagation (7.2) | 12.941 | — | — |
-| **+ Optuna (7.4) — Deploy** | **12.910** | **8.999** | **0.1587** |
+| Dummy Mean Baseline | 21.904 | — | ~0 |
+| Linear models | ~21.5 | — | — |
+| **LightGBM (6.4)** | 21.107 | — | 0.0713 |
+| + Weather (7.1) | 20.194 | 13.063 | 0.1500 |
+| + Propagation (7.2) | 20.111 | — | — |
+| **+ Optuna (7.4) — Deploy** | **20.057** | **13.033** | **0.1561** |
 
 **Model được deploy:** LightGBM với Optuna tuning, weather features và delay propagation, đóng gói trong sklearn Pipeline — serialize bằng `joblib`, load trực tiếp trong Flask mà không cần tái tạo preprocessing.
 
-> R² ~0.16 là mức hợp lý cho bài toán này — flight delay phụ thuộc nhiều yếu tố vận hành thời điểm thực (sự cố kỹ thuật, ATC slot, gate conflict) vốn không có trong dataset lịch sử.
+> R² cuối ~0.156 là mức hợp lý cho bài toán này — flight delay phụ thuộc nhiều yếu tố vận hành thời điểm thực (sự cố kỹ thuật, ATC slot, gate conflict) vốn không có trong dataset lịch sử.
 
 ---
 
@@ -124,19 +124,21 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 
 ### Yêu cầu
 
-- Python 3.9+
+- Python 3.12 khuyến nghị (runtime deploy: `python-3.12.0`)
 - File `flight_delay_all_airlines_model.pkl` (train xong từ notebook, đặt vào `models/`)
 - File `airports.csv` (đặt vào `data/`)
 
 ### Bước 1 — Train model trên Colab
 
 ```
-1. Upload flights.csv, airlines.csv, airports.csv lên Google Drive
+1. Upload `flights.csv.zip`, `airlines.csv`, `airports.csv` lên Google Drive
 2. Mở CK_DataMining_all_airlines_final.ipynb trên Google Colab
 3. Mount Drive và chạy lần lượt các cell
 4. Cell cuối sẽ lưu flight_delay_all_airlines_model.pkl lên Drive
 5. Tải file .pkl về máy, đặt vào thư mục models/
 ```
+
+> Notebook mặc định đọc `/content/drive/MyDrive/flights.csv.zip`. Nếu dùng `flights.csv` dạng đã giải nén, cần chỉnh lại biến `file_path` trong notebook.
 
 Cấu hình chạy nhanh (tiết kiệm RAM Colab free):
 
@@ -150,7 +152,7 @@ RUN_OPTUNA        = True    # Giữ để có hyperparameter tuning
 
 ```bash
 # Tạo virtual environment
-python -m venv venv
+python3 -m venv venv
 source venv/bin/activate        # macOS/Linux
 venv\Scripts\activate           # Windows
 
@@ -158,7 +160,7 @@ venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 
 # Chạy server
-python app.py
+python3 app.py
 ```
 
 Mở trình duyệt tại **http://127.0.0.1:5000**
