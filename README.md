@@ -50,7 +50,8 @@ Demo cuối được đóng gói thành **Flask web app** cho phép dự báo de
 .
 ├── assets/
 │   └── screenshots/
-│       └── predictor-home.png               # Ảnh giao diện demo
+│       ├── predictor-home-light.PNG         # Giao diện Light mode
+│       └── predictor-home-dark.PNG          # Giao diện Dark mode
 ├── CK_DataMining_all_airlines_final.ipynb   # Notebook chính (train trên Colab)
 ├── app.py                                   # Flask backend
 ├── requirements.txt                         # Dependencies cho Flask app
@@ -167,9 +168,11 @@ Mở trình duyệt tại **http://127.0.0.1:5000**
 
 ### Giao diện demo
 
-![Flight Delay Predictor demo interface](assets/screenshots/predictor-home.png)
+| Light mode | Dark mode |
+|---|---|
+| ![Light](assets/screenshots/predictor-home-light.PNG) | ![Dark](assets/screenshots/predictor-home-dark.PNG) |
 
-Giao diện Flask demo gồm form nhập sân bay đi/đến, ngày giờ bay, chế độ dự báo theo một hãng hoặc so sánh tất cả hãng, cùng vùng bản đồ lộ trình sẽ hiển thị sau khi dự đoán.
+Giao diện Flask demo gồm form nhập sân bay đi/đến, ngày giờ bay, chế độ dự báo theo một hãng hoặc so sánh tất cả hãng, cùng vùng bản đồ lộ trình sẽ hiển thị sau khi dự đoán. Hỗ trợ chuyển đổi Light / Dark mode, tự nhận diện theme hệ điều hành.
 
 ### Tính năng demo
 
